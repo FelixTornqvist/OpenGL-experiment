@@ -1,0 +1,7 @@
+
+doxygen/
+bin/
+obj/
+*.cbp
+openGLTest.depend
+openGLTest.layout
