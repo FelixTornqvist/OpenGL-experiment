@@ -2,10 +2,11 @@
 
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Model.h"
 
-Model::Model(float x, float y) {
+Model::Model(glm::vec3 pos) {
 
 	for (auto &row : colors) {
 		row[0] = (rand() % 500) / 500.0;
@@ -13,10 +14,7 @@ Model::Model(float x, float y) {
 		row[2] = (rand() % 500) / 500.0;
 	}
 
-	for (auto &row : diamond) {
-		row[0] += x;
-		row[1] += y;
-	}
+	position = pos;
 
 	loadModel();
 }
@@ -55,6 +53,21 @@ void Model::cleanup() {
 	glDeleteVertexArrays(1, vao);
 }
 
+glm::mat4 Model::getTranslationMat() {
+	return glm::translate(glm::mat4(), position);
+}
+
+void Model::setPostition(glm::vec3 pos) {
+	position = pos;
+}
+
+void Model::setRotation(glm::vec3 rot) {
+	rotation = rot;
+}
+
+void Model::setScale(glm::vec3 scle) {
+	scale = scle;
+}
 
 
 Model::~Model() {

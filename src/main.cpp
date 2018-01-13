@@ -24,7 +24,7 @@ void CheckSDLError(int line);
 
 void Render() {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	mRen->render();
 
@@ -54,6 +54,8 @@ bool initGL() {
 	mainContext = SDL_GL_CreateContext(mainWindow );
 
 	SDL_GL_SetSwapInterval(1);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 
 	glewExperimental = GL_TRUE;
 	glewInit();
@@ -82,6 +84,37 @@ void Cleanup() {
 	SDL_Quit();
 }
 
+void applicationLoop() {
+	bool running = true;
+
+	SDL_Event eve;
+	while (running) {
+
+		while (SDL_PollEvent(&eve)) {
+			switch (eve.type) {
+				case SDL_QUIT:
+					running = false;
+					break;
+				case SDL_KEYDOWN:
+					switch (eve.key.keysym.sym ) {
+						case SDLK_ESCAPE:
+							running = false;
+							break;
+						case SDLK_UP:
+
+							break;
+						case SDLK_DOWN:
+							break;
+					}
+
+					break;
+			}
+		}
+
+		Render();
+	}
+}
+
 int main(int argc, char *argv[]) {
 	if (!initWindow() || !initGL())
 		return -1;
@@ -91,8 +124,8 @@ int main(int argc, char *argv[]) {
 
 	SDL_GL_SwapWindow(mainWindow );
 
-	model1 = new Model(-.5,0);
-	model2 = new Model(.5, 0);
+	model1 = new Model(glm::vec3(-.5,0, 0));
+	model2 = new Model(glm::vec3(.1, .1, 0.1));
 	shader = new Shader();
 	shader->UseProgram();
 	mRen = new ModelRenderer(shader);
@@ -100,10 +133,7 @@ int main(int argc, char *argv[]) {
 	mRen->addModel(model1);
 	mRen->addModel(model2);
 
-	Render();
-
-	std::cout << "Rendering done!\n";
-	std::cin.ignore();
+	applicationLoop();
 
 	Cleanup();
 
