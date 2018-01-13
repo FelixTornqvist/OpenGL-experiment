@@ -9,6 +9,7 @@
 
 #include "Shader.h"
 #include "Model.h"
+#include "Camera.h"
 #include "ModelRenderer.h"
 
 std::string programName = "OpenGL test";
@@ -17,6 +18,7 @@ SDL_GLContext mainContext;
 
 Model *model1, *model2;
 Shader *shader;
+Camera *camera;
 ModelRenderer *mRen;
 
 void SetOpenGLAttributes();
@@ -78,6 +80,8 @@ void Cleanup() {
 	delete shader;
 	delete model1;
 	delete model2;
+	delete camera;
+	delete mRen;
 
 	SDL_GL_DeleteContext(mainContext);
 	SDL_DestroyWindow(mainWindow );
@@ -101,9 +105,10 @@ void applicationLoop() {
 							running = false;
 							break;
 						case SDLK_UP:
-
+							model1->position.z -= 0.01;
 							break;
 						case SDLK_DOWN:
+							model1->position.z += 0.01;
 							break;
 					}
 
@@ -124,11 +129,12 @@ int main(int argc, char *argv[]) {
 
 	SDL_GL_SwapWindow(mainWindow );
 
-	model1 = new Model(glm::vec3(-.5,0, 0));
-	model2 = new Model(glm::vec3(.1, .1, 0.1));
+	model1 = new Model(glm::vec3(-.5,0, 1));
+	model2 = new Model(glm::vec3(.1, .1, 1));
 	shader = new Shader();
 	shader->UseProgram();
-	mRen = new ModelRenderer(shader);
+	camera = new Camera(glm::vec3(0), 45, 512.0 / 512.0, 0.1, 100);
+	mRen = new ModelRenderer(shader, camera);
 
 	mRen->addModel(model1);
 	mRen->addModel(model2);

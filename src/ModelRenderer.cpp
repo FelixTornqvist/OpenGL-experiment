@@ -1,11 +1,17 @@
 #include "ModelRenderer.h"
 
-ModelRenderer::ModelRenderer(Shader *s): shader(s) {
+ModelRenderer::ModelRenderer(Shader *s, Camera *_cam): shader(s), cam(_cam) {
 }
 
 void ModelRenderer::render() {
+	glm::mat4 camMat = cam->getProjectionMat() * cam->getViewMat();
+
 	for (Model* model : models) {
 		model->bindModel();
+
+		glm::mat4 finalMat = camMat * model->getTranslationMat();
+		shader->setMVPMatrix(finalMat);
+
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	}
 }

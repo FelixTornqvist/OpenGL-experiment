@@ -19,6 +19,8 @@ Shader::Shader() {
 	fragmentShader = loadShader("tutorial2.frag", GL_FRAGMENT_SHADER);
 
 	linkShaderProgram();
+
+	mvpMatrix = glGetUniformLocation(shaderProgram, "mvp");
 }
 
 std::string Shader::ReadFile(const char* file) {
@@ -32,6 +34,11 @@ std::string Shader::ReadFile(const char* file) {
 
 void Shader::BindAttributeLocation(int index, const std::string &attribute) {
 	glBindAttribLocation(shaderProgram, index, attribute.c_str());
+}
+
+
+void Shader::setMVPMatrix(glm::mat4 mat) {
+	glUniformMatrix4fv(mvpMatrix, 1, GL_FALSE, &mat[0][0]);
 }
 
 void Shader::UseProgram() {

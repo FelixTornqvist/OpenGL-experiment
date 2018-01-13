@@ -7,6 +7,8 @@
 
 class Model {
 	public:
+		glm::vec3 position;
+
 		Model(glm::vec3 pos);
 
 		void loadModel();
@@ -47,7 +49,7 @@ class Model {
 		// The positons of the position and color data within the VAO
 		const uint32_t positionAttributeIndex = 0, colorAttributeIndex = 1;
 
-		glm::vec3 position, rotation, scale;
+		glm::vec3  rotation, scale;
 };
 
 #endif // MODEL_H

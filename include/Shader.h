@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
+#include <glm/glm.hpp>
 
 #include <string>
 
@@ -10,6 +11,7 @@ class Shader {
 		Shader();
 
 		void BindAttributeLocation(int index, const std::string &attribute);
+		void setMVPMatrix(glm::mat4 mat);
 
 		void UseProgram();
 
@@ -18,6 +20,7 @@ class Shader {
 	private:
 		GLuint shaderProgram;
 		GLuint vertexshader, fragmentShader;
+		GLint mvpMatrix;
 
 		std::string ReadFile(const char* file);
 

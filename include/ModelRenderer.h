@@ -5,10 +5,11 @@
 
 #include "Shader.h"
 #include "Model.h"
+#include "Camera.h"
 
 class ModelRenderer {
 	public:
-		ModelRenderer(Shader *shader);
+		ModelRenderer(Shader *shader, Camera *cam);
 
 		void render();
 
@@ -20,6 +21,7 @@ class ModelRenderer {
 
 	private:
 		Shader *shader;
+		Camera *cam;
 		std::vector<Model*> models;
 };
 
