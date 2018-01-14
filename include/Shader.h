@@ -8,26 +8,25 @@
 
 class Shader {
 	public:
-		Shader();
-
 		void BindAttributeLocation(int index, const std::string &attribute);
-		void setMVPMatrix(glm::mat4 mat);
 
 		void UseProgram();
 
 		~Shader();
 
-	private:
-		GLuint shaderProgram;
-		GLuint vertexshader, fragmentShader;
-		GLint mvpMatrix;
-
-		std::string ReadFile(const char* file);
+	protected:
+		Shader();
+		GLuint getProgramID();
 
 		/** Throws runtime_exception if there was an error loading the shader*/
 		GLuint loadShader(const std::string &filename, GLenum shaderType);
 		/** Throws runtime_exception if there was an error linking the shader program*/
 		void linkShaderProgram();
+
+	private:
+		GLuint shaderProgram;
+
+		std::string ReadFile(const char* file);
 
 		std::string getShaderLinkingError(int32_t shaderId);
 		std::string getShaderCompilationErrorInfo(int32_t shaderId);

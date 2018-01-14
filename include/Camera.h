@@ -20,6 +20,9 @@ class Camera {
 		glm::vec3 getPostition();
 		glm::vec3 getRotation();
 
+		float getFOV();
+		void setFOV(float fov);
+
 		virtual ~Camera();
 
 	protected:

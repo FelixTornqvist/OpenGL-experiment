@@ -11,7 +11,8 @@ Camera::Camera(float _fov, float _aspect, float _near, float _far):
 }
 
 glm::mat4 Camera::getProjectionMat() {
-	return glm::perspective(fov, aspect, near, far);
+	float fovRad = (fov/180) * M_PI;
+	return glm::perspective(fovRad, aspect, near, far);
 }
 
 glm::mat4 Camera::getViewMat() {
@@ -55,6 +56,14 @@ glm::vec3 Camera::getPostition() {
 
 glm::vec3 Camera::getRotation() {
 	return rotation;
+}
+
+float Camera::getFOV() {
+	return fov;
+}
+
+void Camera::setFOV(float _fov) {
+	fov = _fov;
 }
 
 

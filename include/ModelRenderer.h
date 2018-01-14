@@ -3,13 +3,13 @@
 
 #include <vector>
 
-#include "Shader.h"
+#include "ModelShader.h"
 #include "Model.h"
 #include "Camera.h"
 
 class ModelRenderer {
 	public:
-		ModelRenderer(Shader *shader, Camera *cam);
+		ModelRenderer(ModelShader *shader, Camera *cam);
 
 		void render();
 
@@ -20,7 +20,7 @@ class ModelRenderer {
 	protected:
 
 	private:
-		Shader *shader;
+		ModelShader *shader;
 		Camera *cam;
 		std::vector<Model*> models;
 };

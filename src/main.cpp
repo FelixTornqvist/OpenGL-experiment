@@ -18,7 +18,7 @@ SDL_Window *mainWindow;
 SDL_GLContext mainContext;
 
 std::vector<Model*> models;
-Shader *shader;
+ModelShader *shader;
 Camera *camera;
 ModelRenderer *mRen;
 
@@ -141,12 +141,21 @@ void applicationLoop() {
 		SDL_GetRelativeMouseState(&mDX, &mDY);
 		camera->addRotation(glm::vec3(.002 * -mDY, .002 * -mDX, 0));
 		glm::vec3 camR = camera->getRotation();
-		if (camR.x < M_PI_2) {
-			camR.x = M_PI_2;
+		if (camR.x < M_PI_2 + 0.001) {
+			camR.x = M_PI_2 + 0.001;
 		} else if (camR.x > M_PI + M_PI_2 - 0.001) {
 			camR.x = M_PI + M_PI_2 - 0.001;
 		}
 		camera->setRotation(camR);
+
+
+		if (state[SDL_SCANCODE_UP]) {
+			camera->setFOV(camera->getFOV() + 1);
+			std::cout << "FOV: " << camera->getFOV() << std::endl;
+		} else if (state[SDL_SCANCODE_DOWN]) {
+			camera->setFOV(camera->getFOV() - 1);
+			std::cout << "FOV: " << camera->getFOV() << std::endl;
+		}
 
 		Render();
 	}
@@ -168,9 +177,9 @@ int main(int argc, char *argv[]) {
 	SDL_GL_SwapWindow(mainWindow );
 
 	addModels(1000);
-	shader = new Shader();
+	shader = new ModelShader();
 	shader->UseProgram();
-	camera = new Camera(45, 512.0 / 512.0, 0.1, 100);
+	camera = new Camera(85, 512.0 / 512.0, 0.1, 100);
 	mRen = new ModelRenderer(shader, camera);
 
 	for (Model *model: models) {
