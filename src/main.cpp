@@ -126,9 +126,9 @@ void applicationLoop() {
 		glm::vec3 direction = camera->getPointingDirection();
 		float camRY = camera->getRotation().y;
 		if (state[SDL_SCANCODE_A]) {
-			camera->addPostition(glm::vec3(sin(camRY), 0, cos(camRY)) * dSpeed);
+			camera->addPostition(glm::vec3(sin(camRY), 0, -cos(camRY)) * dSpeed);
 		} else if (state[SDL_SCANCODE_D]) {
-			camera->addPostition(glm::vec3(-sin(camRY), 0, -cos(camRY)) * dSpeed);
+			camera->addPostition(glm::vec3(-sin(camRY), 0, cos(camRY)) * dSpeed);
 		}
 
 		if (state[SDL_SCANCODE_W]) {
@@ -140,12 +140,13 @@ void applicationLoop() {
 		int mDX, mDY;
 		SDL_GetRelativeMouseState(&mDX, &mDY);
 		camera->addRotation(glm::vec3(.002 * -mDY, .002 * -mDX, 0));
-//		glm::vec3 camR = camera->getRotation();
-//		if (camR.x > M_PI_2 && camR.x < M_PI * 2 - M_PI_2) {
-//			camR.x = M_PI_2;
-//		} else if (camR.x < M_PI * 2 - M_PI_2) {
-//			camR.x = M_PI * 2;
-//		}
+		glm::vec3 camR = camera->getRotation();
+		if (camR.x < M_PI_2) {
+			camR.x = M_PI_2;
+		} else if (camR.x > M_PI + M_PI_2 - 0.001) {
+			camR.x = M_PI + M_PI_2 - 0.001;
+		}
+		camera->setRotation(camR);
 
 		Render();
 	}
@@ -166,7 +167,7 @@ int main(int argc, char *argv[]) {
 
 	SDL_GL_SwapWindow(mainWindow );
 
-	addModels(100);
+	addModels(1000);
 	shader = new Shader();
 	shader->UseProgram();
 	camera = new Camera(45, 512.0 / 512.0, 0.1, 100);
