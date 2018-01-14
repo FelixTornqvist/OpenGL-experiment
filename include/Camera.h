@@ -9,6 +9,7 @@ class Camera {
 
 		glm::mat4 getProjectionMat();
 		glm::mat4 getViewMat();
+		glm::vec3 getPointingDirection();
 
 		void setPostition(glm::vec3 pos);
 		void setRotation(glm::vec3 rot);

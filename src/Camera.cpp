@@ -15,6 +15,10 @@ glm::mat4 Camera::getProjectionMat() {
 }
 
 glm::mat4 Camera::getViewMat() {
+	return glm::lookAt(position, getPointingDirection() + position, glm::vec3(0,-1,0));
+}
+
+glm::vec3 Camera::getPointingDirection() {
 	float pitch = rotation.x;
 	float yaw = rotation.y;
 
@@ -22,10 +26,8 @@ glm::mat4 Camera::getViewMat() {
 	direction.x = cos(pitch) * cos(yaw);
 	direction.y = sin(pitch);
 	direction.z = cos(pitch) * sin(yaw);
-
-	return glm::lookAt(position, direction + position, glm::vec3(0,-1,0));
+	return direction;
 }
-
 
 void Camera::setPostition(glm::vec3 pos) {
 	position = pos;

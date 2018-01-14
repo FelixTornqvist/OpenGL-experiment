@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <stdlib.h>
 
 #define GL3_PROTOTYPES 1
 #include <GL/glew.h>
@@ -16,7 +17,7 @@ std::string programName = "OpenGL test";
 SDL_Window *mainWindow;
 SDL_GLContext mainContext;
 
-Model *model1, *model2;
+std::vector<Model*> models;
 Shader *shader;
 Camera *camera;
 ModelRenderer *mRen;
@@ -46,7 +47,7 @@ bool initWindow() {
 	}
 
 	mainWindow = SDL_CreateWindow(programName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-								  512, 512, SDL_WINDOW_OPENGL);
+								  1024, 1024, SDL_WINDOW_OPENGL);
 
 	if (!mainWindow ) {
 		std::cout << "Unable to create window\n"<< std::endl;;
@@ -84,10 +85,12 @@ void SetOpenGLAttributes() {
 
 void Cleanup() {
 	delete shader;
-	delete model1;
-	delete model2;
 	delete camera;
 	delete mRen;
+
+	for (Model* model : models) {
+		delete model;
+	}
 
 	SDL_GL_DeleteContext(mainContext);
 	SDL_DestroyWindow(mainWindow );
@@ -111,12 +114,6 @@ void applicationLoop() {
 						case SDLK_ESCAPE:
 							running = false;
 							break;
-						case SDLK_UP:
-							model1->addPostition(glm::vec3(0,0,0.1));
-							break;
-						case SDLK_DOWN:
-							model1->addPostition(glm::vec3(0,0,-0.1));;
-							break;
 						case SDLK_m:
 							std::cout << "captured:" << SDL_SetRelativeMouseMode(SDL_GetRelativeMouseMode() == SDL_FALSE? SDL_TRUE : SDL_FALSE) << " off:" << SDL_GetRelativeMouseMode() << std::endl;
 					}
@@ -125,18 +122,39 @@ void applicationLoop() {
 			}
 		}
 
+		glm::vec3 dSpeed(0.1);
+		glm::vec3 direction = camera->getPointingDirection();
+		float camRY = camera->getRotation().y;
 		if (state[SDL_SCANCODE_A]) {
-
+			camera->addPostition(glm::vec3(sin(camRY), 0, cos(camRY)) * dSpeed);
 		} else if (state[SDL_SCANCODE_D]) {
+			camera->addPostition(glm::vec3(-sin(camRY), 0, -cos(camRY)) * dSpeed);
+		}
 
+		if (state[SDL_SCANCODE_W]) {
+			camera->addPostition(direction * dSpeed);
+		} else if (state[SDL_SCANCODE_S]) {
+			camera->addPostition(-direction * dSpeed);
 		}
 
 		int mDX, mDY;
 		SDL_GetRelativeMouseState(&mDX, &mDY);
-		camera->addRotation(glm::vec3(.005 * mDY, .005 * mDX, 0));
+		camera->addRotation(glm::vec3(.002 * -mDY, .002 * -mDX, 0));
+//		glm::vec3 camR = camera->getRotation();
+//		if (camR.x > M_PI_2 && camR.x < M_PI * 2 - M_PI_2) {
+//			camR.x = M_PI_2;
+//		} else if (camR.x < M_PI * 2 - M_PI_2) {
+//			camR.x = M_PI * 2;
+//		}
 
 		Render();
 	}
+}
+
+void addModels(int amount) {
+	int dist = 50;
+	for (int i = 0; i < amount; i++)
+		models.push_back(new Model(glm::vec3(rand() % dist, rand() % dist, rand() % dist) - glm::vec3(dist / 2)));
 }
 
 int main(int argc, char *argv[]) {
@@ -148,15 +166,15 @@ int main(int argc, char *argv[]) {
 
 	SDL_GL_SwapWindow(mainWindow );
 
-	model1 = new Model(glm::vec3(-.5,0, 1));
-	model2 = new Model(glm::vec3(.1, .1, 1));
+	addModels(100);
 	shader = new Shader();
 	shader->UseProgram();
 	camera = new Camera(45, 512.0 / 512.0, 0.1, 100);
 	mRen = new ModelRenderer(shader, camera);
 
-	mRen->addModel(model1);
-	mRen->addModel(model2);
+	for (Model *model: models) {
+		mRen->addModel(model);
+	}
 
 	applicationLoop();
 
