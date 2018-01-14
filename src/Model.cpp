@@ -69,6 +69,32 @@ void Model::setScale(glm::vec3 scle) {
 	scale = scle;
 }
 
+void Model::addPostition(glm::vec3 pos) {
+	position += pos;
+}
+
+void Model::addRotation(glm::vec3 rot) {
+	rotation += rot;
+}
+
+void Model::addScale(glm::vec3 scle) {
+	scale += scle;
+}
+
+
+glm::vec3 Model::getPostition() {
+	return position;
+}
+
+glm::vec3 Model::getRotation() {
+	return rotation;
+}
+
+glm::vec3 Model::getScale() {
+	return scale;
+}
+
+
 
 Model::~Model() {
 	cleanup();

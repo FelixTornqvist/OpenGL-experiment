@@ -1,18 +1,13 @@
+#include <iostream>
+#include <math.h>
+
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Camera.h"
 
-Camera::Camera(glm::vec3 _pos, float _fov, float _aspect, float _near, float _far):
-	position(_pos), fov(_fov), aspect(_aspect), near(_near), far(_far) {
+Camera::Camera(float _fov, float _aspect, float _near, float _far):
+	position(0), rotation(0, 0, 1), fov(_fov), aspect(_aspect), near(_near), far(_far) {
 	//ctor
-}
-
-glm::vec3 Camera::getPosition() {
-	return position;
-}
-
-glm::vec3 Camera::getRotation() {
-	return rotation;
 }
 
 glm::mat4 Camera::getProjectionMat() {
@@ -20,9 +15,46 @@ glm::mat4 Camera::getProjectionMat() {
 }
 
 glm::mat4 Camera::getViewMat() {
-	glm::vec3 camRot(.1, .1, 1);
-	return glm::lookAt(position, camRot, glm::vec3(0,-1,0));
+	float pitch = rotation.x;
+	float yaw = rotation.y;
+
+	glm::vec3 direction;
+	direction.x = cos(pitch) * cos(yaw);
+	direction.y = sin(pitch);
+	direction.z = cos(pitch) * sin(yaw);
+
+	return glm::lookAt(position, direction + position, glm::vec3(0,-1,0));
 }
+
+
+void Camera::setPostition(glm::vec3 pos) {
+	position = pos;
+}
+
+void Camera::setRotation(glm::vec3 rot) {
+	rotation = rot;
+}
+
+
+void Camera::addPostition(glm::vec3 pos) {
+	position += pos;
+}
+
+void Camera::addRotation(glm::vec3 rot) {
+	rotation += rot;
+	glm::vec3 pie(M_PI * 2);
+	rotation = glm::mod(rotation, pie);
+}
+
+
+glm::vec3 Camera::getPostition() {
+	return position;
+}
+
+glm::vec3 Camera::getRotation() {
+	return rotation;
+}
+
 
 Camera::~Camera() {
 	//dtor

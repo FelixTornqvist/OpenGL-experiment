@@ -5,13 +5,19 @@
 
 class Camera {
 	public:
-		Camera(glm::vec3 pos, float fov, float aspect, float near, float far);
-
-		glm::vec3 getPosition();
-		glm::vec3 getRotation();
+		Camera(float fov, float aspect, float near, float far);
 
 		glm::mat4 getProjectionMat();
 		glm::mat4 getViewMat();
+
+		void setPostition(glm::vec3 pos);
+		void setRotation(glm::vec3 rot);
+
+		void addPostition(glm::vec3 pos);
+		void addRotation(glm::vec3 rot);
+
+		glm::vec3 getPostition();
+		glm::vec3 getRotation();
 
 		virtual ~Camera();
 

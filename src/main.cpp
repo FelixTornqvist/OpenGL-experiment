@@ -25,12 +25,18 @@ void SetOpenGLAttributes();
 void CheckSDLError(int line);
 
 void Render() {
+	static Uint32 lastFrame;
+	int currFrame = SDL_GetTicks();
+//	std::cout << "fps: " << 1000.0 / (currFrame - lastFrame) << std::endl;
+
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	mRen->render();
 
 	SDL_GL_SwapWindow(mainWindow);
+
+	lastFrame = currFrame;
 }
 
 bool initWindow() {
@@ -92,6 +98,7 @@ void applicationLoop() {
 	bool running = true;
 
 	SDL_Event eve;
+	const Uint8 *state = SDL_GetKeyboardState(NULL);
 	while (running) {
 
 		while (SDL_PollEvent(&eve)) {
@@ -105,16 +112,28 @@ void applicationLoop() {
 							running = false;
 							break;
 						case SDLK_UP:
-							model1->position.z -= 0.01;
+							model1->addPostition(glm::vec3(0,0,0.1));
 							break;
 						case SDLK_DOWN:
-							model1->position.z += 0.01;
+							model1->addPostition(glm::vec3(0,0,-0.1));;
 							break;
+						case SDLK_m:
+							std::cout << "captured:" << SDL_SetRelativeMouseMode(SDL_GetRelativeMouseMode() == SDL_FALSE? SDL_TRUE : SDL_FALSE) << " off:" << SDL_GetRelativeMouseMode() << std::endl;
 					}
 
 					break;
 			}
 		}
+
+		if (state[SDL_SCANCODE_A]) {
+
+		} else if (state[SDL_SCANCODE_D]) {
+
+		}
+
+		int mDX, mDY;
+		SDL_GetRelativeMouseState(&mDX, &mDY);
+		camera->addRotation(glm::vec3(.005 * mDY, .005 * mDX, 0));
 
 		Render();
 	}
@@ -133,7 +152,7 @@ int main(int argc, char *argv[]) {
 	model2 = new Model(glm::vec3(.1, .1, 1));
 	shader = new Shader();
 	shader->UseProgram();
-	camera = new Camera(glm::vec3(0), 45, 512.0 / 512.0, 0.1, 100);
+	camera = new Camera(45, 512.0 / 512.0, 0.1, 100);
 	mRen = new ModelRenderer(shader, camera);
 
 	mRen->addModel(model1);
