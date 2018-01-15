@@ -9,8 +9,6 @@ class Model {
 	public:
 		Model(glm::vec3 pos);
 
-		void loadModel();
-		void cleanup();
 		void bindModel();
 
 		glm::mat4 getTranslationMat();
@@ -34,6 +32,8 @@ class Model {
 	private:
 		glm::vec3 position, rotation, scale;
 		GLuint vbo[2], vao[1];
+		// The positons of the position and color data within the VAO
+		const uint32_t positionAttributeIndex = 0, colorAttributeIndex = 1;
 
 		static const uint32_t points = 4;
 		static const uint32_t floatsPerPoint = 3;
@@ -53,8 +53,7 @@ class Model {
 			{ 0.0, 0.0, 1.0, 1.0  }, // Bottom left
 		};
 
-		// The positons of the position and color data within the VAO
-		const uint32_t positionAttributeIndex = 0, colorAttributeIndex = 1;
+		void loadModel();
 };
 
 #endif // MODEL_H

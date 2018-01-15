@@ -12,6 +12,7 @@
 #include "Model.h"
 #include "Camera.h"
 #include "ModelRenderer.h"
+#include "World.h"
 
 std::string programName = "OpenGL test";
 SDL_Window *mainWindow;
@@ -21,6 +22,7 @@ std::vector<Model*> models;
 ModelShader *shader;
 Camera *camera;
 ModelRenderer *mRen;
+World* world;
 
 void SetOpenGLAttributes();
 void CheckSDLError(int line);
@@ -87,6 +89,7 @@ void Cleanup() {
 	delete shader;
 	delete camera;
 	delete mRen;
+	delete world;
 
 	for (Model* model : models) {
 		delete model;
@@ -181,6 +184,7 @@ int main(int argc, char *argv[]) {
 	shader->UseProgram();
 	camera = new Camera(85, 512.0 / 512.0, 0.1, 100);
 	mRen = new ModelRenderer(shader, camera);
+	world = new World();
 
 	for (Model *model: models) {
 		mRen->addModel(model);

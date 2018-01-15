@@ -1,0 +1,6 @@
+#ifndef CONSTANTS_H_INCLUDED
+#define CONSTANTS_H_INCLUDED
+
+static const int CHUNK_SIZE = 10;
+
+#endif // CONSTANTS_H_INCLUDED

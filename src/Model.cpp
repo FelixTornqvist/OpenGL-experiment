@@ -46,13 +46,6 @@ void Model::bindModel() {
 	glBindVertexArray(vao[0]);
 }
 
-
-void Model::cleanup() {
-	glDisableVertexAttribArray(0);
-	glDeleteBuffers(1, vbo);
-	glDeleteVertexArrays(1, vao);
-}
-
 glm::mat4 Model::getTranslationMat() {
 	return glm::translate(glm::mat4(), position);
 }
@@ -97,5 +90,7 @@ glm::vec3 Model::getScale() {
 
 
 Model::~Model() {
-	cleanup();
+	glDisableVertexAttribArray(0);
+	glDeleteBuffers(1, vbo);
+	glDeleteVertexArrays(1, vao);;
 }
