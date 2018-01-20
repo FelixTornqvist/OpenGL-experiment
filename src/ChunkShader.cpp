@@ -1,7 +1,7 @@
-#include "ModelShader.h"
+#include "ChunkShader.h"
 #include "Constants.h"
 
-ModelShader::ModelShader() {
+ChunkShader::ChunkShader() {
 	BindAttributeLocation(0, "in_Position");
 	BindAttributeLocation(1, "in_Color");
 
@@ -12,11 +12,11 @@ ModelShader::ModelShader() {
 	mvpMatrix = glGetUniformLocation(getProgramID(), "mvp");
 }
 
-void ModelShader::setMVPMatrix(glm::mat4 mat) {
+void ChunkShader::setMVPMatrix(glm::mat4 mat) {
 	glUniformMatrix4fv(mvpMatrix, 1, GL_FALSE, &mat[0][0]);
 }
 
-ModelShader::~ModelShader() {
+ChunkShader::~ChunkShader() {
 	glDetachShader(getProgramID(), vertexshader);
 	glDetachShader(getProgramID(), fragmentShader);
 	glDeleteShader(vertexshader);

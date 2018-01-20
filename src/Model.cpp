@@ -92,5 +92,5 @@ glm::vec3 Model::getScale() {
 Model::~Model() {
 	glDisableVertexAttribArray(0);
 	glDeleteBuffers(1, vbo);
-	glDeleteVertexArrays(1, vao);;
+	glDeleteVertexArrays(1, vao);
 }

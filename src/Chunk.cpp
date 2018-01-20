@@ -9,7 +9,7 @@ Chunk::Chunk(): position(0) {
 }
 
 void Chunk::bindModel() {
-
+	glBindVertexArray(vao[0]);
 }
 
 glm::mat4 Chunk::getTranslationMat() {
@@ -54,5 +54,7 @@ glm::vec3 Chunk::getPostition() {
 
 
 Chunk::~Chunk() {
-	//dtor
+	glDisableVertexAttribArray(0);
+	glDeleteBuffers(1, vbo);
+	glDeleteVertexArrays(1, vao);
 }

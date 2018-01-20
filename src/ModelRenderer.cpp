@@ -6,6 +6,7 @@ ModelRenderer::ModelRenderer(ModelShader *s, Camera *_cam): shader(s), cam(_cam)
 void ModelRenderer::render() {
 	glm::mat4 camMat = cam->getProjectionMat() * cam->getViewMat();
 
+	shader->UseProgram();
 	for (Model* model : models) {
 		model->bindModel();
 

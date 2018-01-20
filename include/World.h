@@ -2,10 +2,12 @@
 #define WORLD_H
 
 #include "Chunk.h"
+#include "Camera.h"
+#include "ChunkShader.h"
 
 class World {
 	public:
-		World();
+		World(Camera *cam);
 
 		void tick(int millisPassed);
 		void render();
@@ -15,7 +17,9 @@ class World {
 	protected:
 
 	private:
+		Camera *cam;
 		Chunk *tstChunk;
+		ChunkShader *chunkShader;
 };
 
 #endif // WORLD_H

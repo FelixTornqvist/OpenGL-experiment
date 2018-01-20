@@ -1,16 +1,16 @@
-#ifndef MODELSHADER_H
-#define MODELSHADER_H
+#ifndef CHUNKSHADER_H
+#define CHUNKSHADER_H
 
 #include "Shader.h"
 
 
-class ModelShader : public Shader {
+class ChunkShader : public Shader {
 	public:
-		ModelShader();
+		ChunkShader();
 
 		void setMVPMatrix(glm::mat4 mat);
 
-		virtual ~ModelShader();
+		virtual ~ChunkShader();
 
 	protected:
 
@@ -19,4 +19,4 @@ class ModelShader : public Shader {
 		GLuint vertexshader, fragmentShader;
 };
 
-#endif // MODELSHADER_H
+#endif // CHUNKSHADER_H

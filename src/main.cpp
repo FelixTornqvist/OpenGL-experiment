@@ -36,6 +36,7 @@ void Render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	mRen->render();
+	world->render();
 
 	SDL_GL_SwapWindow(mainWindow);
 
@@ -184,7 +185,7 @@ int main(int argc, char *argv[]) {
 	shader->UseProgram();
 	camera = new Camera(85, 512.0 / 512.0, 0.1, 100);
 	mRen = new ModelRenderer(shader, camera);
-	world = new World();
+	world = new World(camera);
 
 	for (Model *model: models) {
 		mRen->addModel(model);
