@@ -7,7 +7,7 @@ ModelShader::ModelShader() {
 
 	vertexshader = loadShader(SHADER_DIR + "/tutorial2.vert", GL_VERTEX_SHADER);
 	fragmentShader = loadShader(SHADER_DIR + "/tutorial2.frag", GL_FRAGMENT_SHADER);
-	linkShaderProgram();
+	linkShaderProgram("modelShader");
 
 	mvpMatrix = glGetUniformLocation(getProgramID(), "mvp");
 }

@@ -49,21 +49,21 @@ GLuint Shader::loadShader(const std::string &filename, GLenum shaderType) {
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &wasCompiled );
 
 	if (wasCompiled == 0) {
-		throw std::runtime_error("error while compiling shader: " + getShaderCompilationErrorInfo(shader));
+		throw std::runtime_error("error while compiling shader \"" + filename + "\": " + getShaderCompilationErrorInfo(shader));
 	}
 
 	glAttachShader(shaderProgram, shader);
 	return shader;
 }
 
-void Shader::linkShaderProgram() {
+void Shader::linkShaderProgram(const std::string &programName) {
 	glLinkProgram(shaderProgram);
 
 	int isLinked;
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, (int *)&isLinked);
 
 	if (isLinked == false)
-		throw std::runtime_error("error while linking shader: " + getShaderLinkingError(shaderProgram));
+		throw std::runtime_error("error while linking shader \"" + programName + "\: " + getShaderLinkingError(shaderProgram));
 }
 
 std::string Shader::getShaderLinkingError(int32_t shaderId) {

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Chunk.h"
 
@@ -29,7 +30,7 @@ void Chunk::fillTerrainPoints() {
 }
 
 void Chunk::loadModel(uint *arr, int siz) {
-	glGenBuffers(1, vbo);
+	glGenBuffers(2, vbo);
 
 	glGenVertexArrays(1, vao);
 	glBindVertexArray(vao[0]);
@@ -41,7 +42,23 @@ void Chunk::loadModel(uint *arr, int siz) {
 	glVertexAttribPointer(positionAttributeIndex, 1, GL_INT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(positionAttributeIndex);
 
+
+	GLfloat *colors = genRandFloats(siz * floatsPerColor);
+	// Colors
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, ( siz * floatsPerColor) * sizeof(GLfloat), colors, GL_STATIC_DRAW);
+	glVertexAttribPointer(colorAttributeIndex, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(colorAttributeIndex);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+GLfloat* Chunk::genRandFloats(int ammount) {
+    GLfloat rnd[ammount];
+    for (int i = 0; i < ammount; i++) {
+        rnd[ammount] = rand() % 500 / 500.0;
+    }
+    return rnd;
 }
 
 void Chunk::setPostition(glm::vec3 pos) {
