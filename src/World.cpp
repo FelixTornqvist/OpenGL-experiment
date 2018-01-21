@@ -18,7 +18,7 @@ void World::render() {
 	glm::mat4 finalMat = camMat * tstChunk->getTranslationMat();
 	chunkShader->setMVPMatrix(finalMat);
 
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	tstChunk->render();
 }
 
 

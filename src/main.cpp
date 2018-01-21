@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
 
 	SDL_GL_SwapWindow(mainWindow );
 
-	addModels(1000);
+	addModels(10);
 	shader = new ModelShader();
 	shader->UseProgram();
 	camera = new Camera(85, 512.0 / 512.0, 0.1, 100);

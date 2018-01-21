@@ -13,6 +13,7 @@ class Chunk {
 		Chunk();
 
 		void bindModel();
+		void render();
 
 		glm::mat4 getTranslationMat();
 
@@ -30,10 +31,11 @@ class Chunk {
 		// The positons of the position and color data within the VAO
 		const uint32_t positionAttributeIndex = 0, colorAttributeIndex = 1;
 		int floatsPerColor = 4;
+		int vbSize;
 
 		void fillTerrainPoints();
 		void loadModel(uint *arr, int siz);
-		GLfloat* genRandFloats(int amount);
+		void genRandFloats(GLfloat* arrLoc, int amount);
 };
 
 #endif // CHUNK_H
