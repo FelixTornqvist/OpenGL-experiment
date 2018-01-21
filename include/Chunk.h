@@ -34,7 +34,7 @@ class Chunk {
 		int vbSize;
 
 		void fillTerrainPoints();
-		void loadModel(uint *arr, int siz);
+		void loadModel(GLfloat *arr, int siz);
 		void genRandFloats(GLfloat* arrLoc, int amount);
 };
 

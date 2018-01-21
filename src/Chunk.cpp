@@ -36,36 +36,24 @@ void Chunk::fillTerrainPoints() {
 	points[0][1][1] = true;
 }
 
-void Chunk::loadModel(uint *arr, int siz) {
+void Chunk::loadModel(GLfloat *arr, int siz) {
 	vbSize = siz;
 	glGenBuffers(2, vbo);
 
 	glGenVertexArrays(1, vao);
 	glBindVertexArray(vao[0]);
 
-	GLfloat pos[siz *3];
-	for (int i = 0; i < siz; i++) {
-		uint mask = 0x3FF; //0b00000000000000000000001111111111;
-		uint x = arr[i] & mask;
-		uint y = (arr[i] >> 10) & mask;
-		uint z = (arr[i] >> 20) & mask;
-
-		std::cout << "pos: " << x << "," << y << "," << z << std::endl;
-		pos[i*3] = x;
-		pos[i*3 + 1] = y;
-		pos[i*3 + 2] = z;
-	}
-
 
 	// Positions
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, 3* siz * sizeof(GLfloat), pos, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 3 * siz * sizeof(GLfloat), arr, GL_STATIC_DRAW);
 	glVertexAttribPointer(positionAttributeIndex, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(positionAttributeIndex);
 
-
+	// TEMP CODE
 	GLfloat colors[siz * floatsPerColor];
 	genRandFloats(colors, siz * floatsPerColor);
+
 	// Colors
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, ( siz * floatsPerColor) * sizeof(GLfloat), colors, GL_STATIC_DRAW);
@@ -73,11 +61,6 @@ void Chunk::loadModel(uint *arr, int siz) {
 	glEnableVertexAttribArray(colorAttributeIndex);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	for (int i = 0; i < siz; i++) {
-		std::cout << "pos: " << pos[i*3] << "," << pos[i*3 + 1] << "," << pos[i*3 + 2] << std::endl;
-		std::cout << "col: " << colors[i*3] << "," << colors[i*3 + 1] << "," << colors[i*3 + 2] << std::endl;
-	}
 }
 
 void Chunk::genRandFloats(GLfloat* arrLoc, int ammount) {

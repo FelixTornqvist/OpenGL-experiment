@@ -5,46 +5,34 @@ BakedChunk::BakedChunk(bool (&points)[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE]) {
 }
 
 void BakedChunk::bake(bool (&points)[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE]) {
-//	mesh.push_back(point(10,10,10));
-//	mesh.push_back(point(10,11,10));
-//	mesh.push_back(point(11,10,10));
-//
-//	mesh.push_back(point(10,10,11));
-//	mesh.push_back(point(10,11,10));
-//	mesh.push_back(point(11,10,10));
 
-	for (int i = 0; i < 50; i += 2) {
-		mesh.push_back(point(0 + i,0 + i,0 + i));
-		mesh.push_back(point(0 + i,1 + i,0 + i));
-		mesh.push_back(point(1 + i,0 + i,0 + i));
+	for (int j = 0; j < 50; j += 1) {
+		for (int i = 0; i < 50; i += 1) {
+			int x = j, y = i, z = 0;
 
-		mesh.push_back(point(0 + i,0 + i,1 + i));
-		mesh.push_back(point(0 + i,1 + i,0 + i));
-		mesh.push_back(point(1 + i,0 + i,0 + i));
+			point(0 + x,0 + y,0 + z);
+			point(0 + x,1 + y,0 + z);
+			point(1 + x,0 + y,0 + z);
+
+			point(1 + x,1 + y,0 + z);
+			point(0 + x,1 + y,0 + z);
+			point(1 + x,0 + y,0 + z);
+		}
 	}
-//	mesh.push_back(point(0,0,0));
-//	mesh.push_back(point(0,1,0));
-//	mesh.push_back(point(1,0,0));
-//
-//	mesh.push_back(point(0,0,1));
-//	mesh.push_back(point(0,1,0));
-//	mesh.push_back(point(1,0,0));
 }
 
-uint BakedChunk::point(uint x, uint y, uint z) {
-	uint mask = 0x3FF; // binary: 0b00000000000000000000001111111111
-	x &= mask;
-	y &= mask;
-	z &= mask;
-	return x | y << 10 | z << 20;
+void BakedChunk::point(GLfloat x, GLfloat y, GLfloat z) {
+	mesh.push_back(x);
+	mesh.push_back(y);
+	mesh.push_back(z);
 }
 
-uint* BakedChunk::getMesh() {
+GLfloat* BakedChunk::getMesh() {
 	return &mesh[0];
 }
 
 int BakedChunk::getSize() {
-	return mesh.size();
+	return mesh.size() / 3;
 }
 
 BakedChunk::~BakedChunk() {
