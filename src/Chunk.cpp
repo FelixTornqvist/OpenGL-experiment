@@ -24,7 +24,7 @@ glm::mat4 Chunk::getTranslationMat() {
 }
 
 void Chunk::fillTerrainPoints() {
-	points[0][0][0] = true;
+//	points[0][0][0] = true;
 	points[1][0][0] = true;
 	points[1][1][0] = true;
 	points[0][1][0] = true;
