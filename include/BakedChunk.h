@@ -23,6 +23,9 @@ class BakedChunk {
 		std::vector<GLfloat> mesh;
 
 		void bake(bool (&points)[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE]);
+		void inline bakeVoxel(int x, int y, int z, bool (&points)[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE]);
+
+		void inline point(GLfloat x, GLfloat y, GLfloat z, int cornerIndex);
 		void inline point(GLfloat x, GLfloat y, GLfloat z);
 };
 

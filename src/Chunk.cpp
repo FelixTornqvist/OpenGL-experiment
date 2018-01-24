@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <iostream>
 
 #include <glm/gtc/matrix_transform.hpp>
 

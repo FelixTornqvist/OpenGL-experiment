@@ -40,12 +40,6 @@ void Model::loadModel() {
 	glEnableVertexAttribArray(colorAttributeIndex);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	for (int i = 0; i < points; i++) {
-		std::cout << "Model pos: " << diamond[i][0] << "," << diamond[i][1] << "," << diamond[i][2] << std::endl;
-		std::cout << "Model col: " << colors[i][0] << "," << colors[i][1] << "," << colors[i][2] << std::endl;
-	}
-
 }
 
 void Model::bindModel() {

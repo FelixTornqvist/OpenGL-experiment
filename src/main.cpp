@@ -166,7 +166,7 @@ void applicationLoop() {
 }
 
 void addModels(int amount) {
-	int dist = 50;
+	int dist = 10;
 	for (int i = 0; i < amount; i++)
 		models.push_back(new Model(glm::vec3(rand() % dist, rand() % dist, rand() % dist) - glm::vec3(dist / 2)));
 }
