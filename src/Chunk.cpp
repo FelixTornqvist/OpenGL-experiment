@@ -24,15 +24,62 @@ glm::mat4 Chunk::getTranslationMat() {
 }
 
 void Chunk::fillTerrainPoints() {
-//	points[0][0][0] = true;
-	points[1][0][0] = true;
-	points[1][1][0] = true;
-	points[0][1][0] = true;
+	int x = 0,y = 0,z = 0;
+	points[0+x][0+y][0+z] = false;
+	points[1+x][0+y][0+z] = true;
+	points[1+x][1+y][0+z] = true;
+	points[0+x][1+y][0+z] = true;
+	z = 1;
+	points[0+x][0+y][0+z] = true;
+	points[1+x][0+y][0+z] = true;
+	points[1+x][1+y][0+z] = true;
+	points[0+x][1+y][0+z] = true;
 
-	points[0][0][1] = true;
-	points[1][0][1] = true;
-	points[1][1][1] = true;
-	points[0][1][1] = true;
+
+	x = 5; y = 5; z = 0;
+	points[0+x][0+y][0+z] = true;
+	points[1+x][0+y][0+z] = true;
+	points[1+x][1+y][0+z] = true;
+	points[0+x][1+y][0+z] = true;
+	z = 1;
+	points[0+x][0+y][0+z] = true;
+	points[1+x][0+y][0+z] = true;
+	points[1+x][1+y][0+z] = true;
+	points[0+x][1+y][0+z] = true;
+
+
+	x = 7; y = 5; z = 0;
+	points[0+x][0+y][0+z] = true;
+	points[1+x][0+y][0+z] = true;
+	points[1+x][1+y][0+z] = true;
+	points[0+x][1+y][0+z] = true;
+	z = 1;
+	points[0+x][0+y][0+z] = false;
+	points[1+x][0+y][0+z] = true;
+	points[1+x][1+y][0+z] = true;
+	points[0+x][1+y][0+z] = true;
+
+	x = 5; y = 5; z = 2;
+	points[0+x][0+y][0+z] = true;
+	points[1+x][0+y][0+z] = true;
+	points[1+x][1+y][0+z] = true;
+	points[0+x][1+y][0+z] = true;
+	z = 3;
+	points[0+x][0+y][0+z] = true;
+	points[1+x][0+y][0+z] = true;
+	points[1+x][1+y][0+z] = true;
+	points[0+x][1+y][0+z] = true;
+
+	x = 7; y = 5; z = 2;
+	points[0+x][0+y][0+z] = true;
+	points[1+x][0+y][0+z] = true;
+	points[1+x][1+y][0+z] = true;
+	points[0+x][1+y][0+z] = true;
+	z = 3;
+	points[0+x][0+y][0+z] = true;
+	points[1+x][0+y][0+z] = true;
+	points[1+x][1+y][0+z] = true;
+	points[0+x][1+y][0+z] = true;
 }
 
 void Chunk::loadModel(GLfloat *arr, int siz) {
