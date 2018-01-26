@@ -53,17 +53,12 @@ void BakedChunk::bakeVoxel(int x, int y, int z, bool(& p)[CHUNK_SIZE][CHUNK_SIZE
 	if (!(c[0] || c[1] || c[2] || c[3] || c[4] || c[5] || c[6] || c[7]))
 		return;
 
-	std::cout << "try bake: ";
-	for (bool tu : c)
-		std::cout << tu;
-	std::cout << std::endl;
-
 	// Make top face
 	// crease along what direction?
-	int vStart = 0;
-	if ( (c[0] && c[2]) ) {			//crease from 0 to 2 TOP
+	int vStart = 0;						// 0 = crease from 0 to 2, 1 = crease from 1 to 3
+	if ( (c[0] && c[2]) ) {
 		vStart = 0;
-	} else if ( (c[1] && c[3])) {		//crease from 1 to 3 TOP
+	} else if ( (c[1] && c[3])) {
 		vStart = 1;
 	} else if ( c[4] && c[6]) {
 		vStart = 0;
@@ -71,47 +66,57 @@ void BakedChunk::bakeVoxel(int x, int y, int z, bool(& p)[CHUNK_SIZE][CHUNK_SIZE
 		vStart = 1;
 	}
 
-	int tri1[3];
+	int tri[3];
 	for (int start = vStart; start < 3 + vStart; start += 2) {
-		std::cout << "start: "<< start<< std::endl;
 
 		for (int v = 0; v < 3; v++) {
 
 			if (c[(v + start) % 4]) {
-				tri1[v] = (v + start) % 4;
-				std::cout << "top layer > ";
+				tri[v] = (v + start) % 4;
 			} else if (c[((v + start) % 4) + 4]) {
-				tri1[v] = ((v + start) % 4) + 4;
-				std::cout << "bottom layer > ";
+				tri[v] = ((v + start) % 4) + 4;
 			} else {
-				tri1[0] = -1;
-//						break;
+				tri[0] = -1;
+				break;
 			}
-			std::cout << "tri1[" << v << "]: "<< tri1[v] << std::endl;
 
 		}
-		if (tri1[0] != -1) {
-			std::cout << "--------------not -1!------------"<< std::endl;
-			for (int corn : tri1) {
-				std::cout << "made: " << corn << std::endl;
+		if (tri[0] != -1) {
+			for (int corn : tri) {
 				point(x,y,z, corn);
 			}
 		}
 
 	}
 
+	// Top face done, make sides
+	for (int i = 0; i < 4; i++) {
+		int i1 = (i + 1) % 4;
+		int top = 0;
 
-
-
-//		for (int i = 0; i < 4; i++) {
-//			if (c[i]) {
-//				point(x,y,z, i);
-//			} else if (c[i+4]){
-//				point(x,y,z, i + 4);
-//			}
-//		}
-
-
+		if (c[i1]) {
+			tri[top++] = i1;
+		}
+		if (c[i]) {
+			tri[top++] = i;
+		}
+		if (c[i+4]) {
+			tri[top++] = i + 4;
+		}
+		if (c[i1+4]) {
+			if (top != 3) {
+				tri[top++] = i1 + 4;
+			} else {
+				point(x,y,z, i + 4);
+				point(x,y,z, i1 + 4);
+				point(x,y,z, i1);
+			}
+		}
+		if (top > 2)
+			for (int corn : tri) {
+				point(x,y,z, corn);
+			}
+	}
 }
 
 void BakedChunk::point(GLfloat x, GLfloat y, GLfloat z, int cornerIndex) {
