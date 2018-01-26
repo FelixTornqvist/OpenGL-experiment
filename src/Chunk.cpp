@@ -1,4 +1,4 @@
-#include <stdlib.h>
+#include <math.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -24,62 +24,21 @@ glm::mat4 Chunk::getTranslationMat() {
 }
 
 void Chunk::fillTerrainPoints() {
-	int x = 0,y = 0,z = 0;
-	points[0+x][0+y][0+z] = false;
-	points[1+x][0+y][0+z] = true;
-	points[1+x][1+y][0+z] = true;
-	points[0+x][1+y][0+z] = true;
-	z = 1;
-	points[0+x][0+y][0+z] = true;
-	points[1+x][0+y][0+z] = true;
-	points[1+x][1+y][0+z] = true;
-	points[0+x][1+y][0+z] = true;
+	int chunk2div2 = CHUNK_SIZE / 2;
+	for (int x = 0; x < CHUNK_SIZE; x++) {
+		for (int y = 0; y < CHUNK_SIZE; y++) {
+			for (int z = 0; z < CHUNK_SIZE; z++) {
+				int x2 = x - (CHUNK_SIZE / 2);
+				x2 *= x2;
+				int y2 =  y - (CHUNK_SIZE / 2);
+				y2 *= y2;
+				int z2 =  z - (CHUNK_SIZE / 2);
+				z2 *= z2;
 
-
-	x = 5; y = 5; z = 0;
-	points[0+x][0+y][0+z] = true;
-	points[1+x][0+y][0+z] = true;
-	points[1+x][1+y][0+z] = true;
-	points[0+x][1+y][0+z] = true;
-	z = 1;
-	points[0+x][0+y][0+z] = true;
-	points[1+x][0+y][0+z] = true;
-	points[1+x][1+y][0+z] = true;
-	points[0+x][1+y][0+z] = true;
-
-
-	x = 7; y = 5; z = 0;
-	points[0+x][0+y][0+z] = true;
-	points[1+x][0+y][0+z] = true;
-	points[1+x][1+y][0+z] = true;
-	points[0+x][1+y][0+z] = true;
-	z = 1;
-	points[0+x][0+y][0+z] = false;
-	points[1+x][0+y][0+z] = true;
-	points[1+x][1+y][0+z] = true;
-	points[0+x][1+y][0+z] = true;
-
-	x = 5; y = 5; z = 2;
-	points[0+x][0+y][0+z] = true;
-	points[1+x][0+y][0+z] = true;
-	points[1+x][1+y][0+z] = true;
-	points[0+x][1+y][0+z] = true;
-	z = 3;
-	points[0+x][0+y][0+z] = true;
-	points[1+x][0+y][0+z] = true;
-	points[1+x][1+y][0+z] = true;
-	points[0+x][1+y][0+z] = true;
-
-	x = 7; y = 5; z = 2;
-	points[0+x][0+y][0+z] = true;
-	points[1+x][0+y][0+z] = true;
-	points[1+x][1+y][0+z] = true;
-	points[0+x][1+y][0+z] = true;
-	z = 3;
-	points[0+x][0+y][0+z] = true;
-	points[1+x][0+y][0+z] = true;
-	points[1+x][1+y][0+z] = true;
-	points[0+x][1+y][0+z] = true;
+                points[x][y][z] = sqrt(x2 + y2 + z2) < chunk2div2;
+			}
+		}
+	}
 }
 
 void Chunk::loadModel(GLfloat *arr, int siz) {
