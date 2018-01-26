@@ -50,20 +50,19 @@ void BakedChunk::bakeVoxel(int x, int y, int z, bool(& p)[CHUNK_SIZE][CHUNK_SIZE
 	c[6] = p[x+1][y+1][z+1];
 	c[7] = p[x][y+1][z+1];
 
-	if (!(c[0] || c[1] || c[2] || c[3] || c[4] || c[5] || c[6] || c[7]))
-		return;
-
 	// Make top face
 	// crease along what direction?
 	int vStart = 0;						// 0 = crease from 0 to 2, 1 = crease from 1 to 3
-	if ( (c[0] && c[2]) ) {
+	if ( c[0] && c[2] ) {
 		vStart = 0;
-	} else if ( (c[1] && c[3])) {
+	} else if ( c[1] && c[3] ) {
 		vStart = 1;
-	} else if ( c[4] && c[6]) {
+	} else if ( c[4] && c[6] ) {
 		vStart = 0;
-	} else if ( c[5] && c[7]) {
+	} else if ( c[5] && c[7] ) {
 		vStart = 1;
+	} else {
+		return;
 	}
 
 	int tri[3];
@@ -89,7 +88,40 @@ void BakedChunk::bakeVoxel(int x, int y, int z, bool(& p)[CHUNK_SIZE][CHUNK_SIZE
 
 	}
 
-	// Top face done, make sides
+	// Top face done, make bottom face
+	if ( c[4] && c[6] ) {
+		vStart = 0;						// 0 = crease from 0 to 2, 1 = crease from 1 to 3
+	} else if ( c[5] && c[7] ) {
+		vStart = 1;
+	} else if ( c[0] && c[2] ) {
+		vStart = 0;
+	} else if ( c[1] && c[3] ) {
+		vStart = 1;
+	}
+
+	for (int start = vStart; start < 3 + vStart; start += 2) {
+
+		for (int v = 0; v < 3; v++) {
+
+			if (c[((v + start) % 4) + 4]) {
+				tri[v] = ((v + start) % 4) + 4;
+			} else if (c[(v + start) % 4]) {
+				tri[v] = (v + start) % 4;
+			} else {
+				tri[0] = -1;
+				break;
+			}
+
+		}
+		if (tri[0] != -1) {
+			for (int i = 2; i > -1; i--) {
+				point(x,y,z, tri[i]);
+			}
+		}
+
+	}
+
+	// Bottom face done, make sides
 	for (int i = 0; i < 4; i++) {
 		int i1 = (i + 1) % 4;
 		int top = 0;
