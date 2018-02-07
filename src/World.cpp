@@ -14,7 +14,7 @@ void World::tick(int millisPassed) {
 void World::render() {
 	glm::mat4 camMat = cam->getProjectionMat() * cam->getViewMat();
 
-	glEnable(GL_CULL_FACE);
+//	glEnable(GL_CULL_FACE);
 	chunkShader->UseProgram();
 	tstChunk->bindModel();
 

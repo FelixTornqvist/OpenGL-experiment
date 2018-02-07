@@ -24,18 +24,53 @@ glm::mat4 Chunk::getTranslationMat() {
 }
 
 void Chunk::fillTerrainPoints() {
-	int chunk2div2 = CHUNK_SIZE / 2;
-	for (int x = 0; x < CHUNK_SIZE; x++) {
-		for (int y = 0; y < CHUNK_SIZE; y++) {
-			for (int z = 0; z < CHUNK_SIZE; z++) {
-				int x2 = x - (CHUNK_SIZE / 2);
-				x2 *= x2;
-				int y2 =  y - (CHUNK_SIZE / 2);
-				y2 *= y2;
-				int z2 =  z - (CHUNK_SIZE / 2);
-				z2 *= z2;
+//	int chunk2div2 = CHUNK_SIZE / 2;
+//	for (int x = 0; x < CHUNK_SIZE; x++) {
+//		for (int y = 0; y < CHUNK_SIZE; y++) {
+//			for (int z = 0; z < CHUNK_SIZE; z++) {
+//				int x2 = x - (CHUNK_SIZE / 2);
+//				x2 *= x2;
+//				int y2 =  y - (CHUNK_SIZE / 2);
+//				y2 *= y2;
+//				int z2 =  z - (CHUNK_SIZE / 2);
+//				z2 *= z2;
+//
+//                points[x][y][z] = sqrt(x2 + y2 + z2) < chunk2div2;
+//			}
+//		}
+//	}
 
-                points[x][y][z] = sqrt(x2 + y2 + z2) < chunk2div2;
+	int x = 0;
+	int y = 0;
+
+	for(int b0 = 0; b0 < 2; b0++) {
+		for(int b1 = 0; b1 < 2; b1++) {
+			for(int b2 = 0; b2 < 2; b2++) {
+				for(int b3 = 0; b3 < 2; b3++) {
+					for(int b4 = 0; b4 < 2; b4++) {
+						for(int b5 = 0; b5 < 2; b5++) {
+							for(int b6 = 0; b6 < 2; b6++) {
+								for(int b7 = 0; b7 < 2; b7++) {
+									points[x][y+0][0] = b0;
+									points[x+1][y+0][0] = b1;
+									points[x+1][y+0][1] = b2;
+									points[x][y+0][1] = b3;
+
+									points[x][y+1][0] = b4;
+									points[x+1][y+1][0] = b5;
+									points[x+1][y+1][1] = b6;
+									points[x][y+1][1] = b7;
+
+									x += 3;
+									if (x > CHUNK_SIZE - 2) {
+										x = 0;
+										y += 3;
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}

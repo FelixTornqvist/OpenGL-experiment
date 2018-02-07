@@ -121,8 +121,8 @@ void BakedChunk::bakeVoxel(int x, int y, int z, bool(& p)[CHUNK_SIZE][CHUNK_SIZE
 
 	}
 
-	// Bottom face done, make sides
-	for (int i = 0; i < 4; i++) {
+	// Bottom face done, make left and right sides
+	for (int i = 1; i < 4; i+=2) {
 		int i1 = (i + 1) % 4;
 		int top = 0;
 
@@ -148,6 +148,84 @@ void BakedChunk::bakeVoxel(int x, int y, int z, bool(& p)[CHUNK_SIZE][CHUNK_SIZE
 			for (int corn : tri) {
 				point(x,y,z, corn);
 			}
+	}
+
+	// make back side.
+	// flat
+	if (c[4] && c[1]) {
+		if (c[0]) {
+			point(x,y,z,0);
+			point(x,y,z,4);
+			point(x,y,z,1);
+		}
+		if (c[5]) {
+			point(x,y,z,4);
+			point(x,y,z,5);
+			point(x,y,z,1);
+		}
+
+	} else if (c[0] && c[5]) {
+		if (c[4]) {
+			point(x,y,z,0);
+			point(x,y,z,4);
+			point(x,y,z,5);
+		}
+		if (c[1]) {
+			point(x,y,z,0);
+			point(x,y,z,5);
+			point(x,y,z,1);
+		}
+	}
+	//left bent in
+//	else if ( (c[3] || c[7]) && (c[1] || c[5])) {
+	else if (c[1] && c[7] && !c[4]) {
+		if (c[3] && !c[0]) {
+			point(x,y,z,1);
+			point(x,y,z,3);
+			point(x,y,z,7);
+		}
+		if (c[5]) {
+			point(x,y,z,1);
+			point(x,y,z,7);
+			point(x,y,z,5);
+		}
+
+	} else if (c[3] && c[5] && !c[0]) {
+		if (c[1]) {
+			point(x,y,z,3);
+			point(x,y,z,5);
+			point(x,y,z,1);
+		}
+		if (c[7] && !c[4]) {
+			point(x,y,z,3);
+			point(x,y,z,7);
+			point(x,y,z,5);
+		}
+	}
+	//right bent in
+	else if (c[2] && c[4] && !c[1]) {
+		if (c[0]) {
+			point(x,y,z,2);
+			point(x,y,z,0);
+			point(x,y,z,4);
+		}
+		if (c[6] && !c[5]) {
+			point(x,y,z,2);
+			point(x,y,z,4);
+			point(x,y,z,6);
+		}
+
+	} else if (c[0] && c[6] && !c[5]) {
+		if (c[2] && !c[1]) {
+			point(x,y,z,0);
+			point(x,y,z,6);
+			point(x,y,z,2);
+		}
+		if (c[4]) {
+			point(x,y,z,0);
+			point(x,y,z,4);
+			point(x,y,z,6);
+		}
 	}
 }
 
