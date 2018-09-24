@@ -5,3 +5,5 @@ obj/
 *.cbp
 openGLTest.depend
 openGLTest.layout
+
+build
