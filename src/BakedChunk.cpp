@@ -37,57 +37,87 @@ void BakedChunk::bake(bool (&points)[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE]) {
  |        |
  7--------6
 */
-void BakedChunk::bakeVoxel(int x, int y, int z, 
-		bool(& p)[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE]) {
-	bool c[8];
+void BakedChunk::bakeVoxel(const int x, const int y, const int z, 
+		const bool(& p)[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE]) {
 
-	c[0] = p[x][y][z];
-	c[1] = p[x+1][y][z];
-	c[2] = p[x+1][y][z+1];
-	c[3] = p[x][y][z+1];
+	auto n = [p,x,y,z](int lvl[4], int index, int xa, int ya, int za) 
+		-> void {
+		lvl[index] = p[x+xa][y+ya][z+za]? index + 1 : 0;
+	};
 
-	c[4] = p[x][y+1][z];
-	c[5] = p[x+1][y+1][z];
-	c[6] = p[x+1][y+1][z+1];
-	c[7] = p[x][y+1][z+1];
+	int above[4];
+	int middle[4];
+	int below[4];
 
-	// Make top face
-	// crease along what direction?
-	int vStart = 0;	// 0 = crease from 0 to 2, 1 = crease from 1 to 3
-	if ( c[0] && c[2] ) {
-		vStart = 0;
-	} else if ( c[1] && c[3] ) {
-		vStart = 1;
-	} else if ( c[4] && c[6] ) {
-		vStart = 0;
-	} else if ( c[5] && c[7] ) {
-		vStart = 1;
-	} else {
-		return;
-	}
+	n(above, 0, 0, 1, 0);
+	n(above, 1, 1, 1, 0);
+	n(above, 2, 1, 1, 1);
+	n(above, 3, 0, 1, 1);
+	
+	n(middle, 0, 0, 0, 0);
+	n(middle, 1, 1, 0, 0);
+	n(middle, 2, 1, 0, 1);
+	n(middle, 3, 0, 0, 1);
 
-	int tri[3];
-	for (int start = vStart; start < 3 + vStart; start += 2) {
+	n(below, 0, 0, -1, 0);
+	n(below, 1, 1, -1, 0);
+	n(below, 2, 1, -1, 1);
+	n(below, 3, 0, -1, 1);	
 
-		for (int v = 0; v < 3; v++) {
+//	above[0] = m(0, 1, 0);
+//	above[1] = m(1, 1, 0);
+//	above[2] = m(1, 1, 1);
+//	above[3] = m(0, 1, 1);
 
-			if (c[(v + start) % 4]) {
-				tri[v] = (v + start) % 4;
-			} else if (c[((v + start) % 4) + 4]) {
-				tri[v] = ((v + start) % 4) + 4;
-			} else {
-				tri[0] = -1;
-				break;
-			}
-
+//	middle[0] = m(0, 0, 0);
+//	middle[1] = m(1, 0, 0);
+//	middle[2] = m(1, 0, 1);
+//	middle[3] = m(0, 0, 1);
+//
+//	below[0] = m(0, -1, 0);
+//	below[1] = m(1, -1, 0);
+//	below[2] = m(1, -1, 1);
+//	below[3] = m(0, -1, 1);
+	
+	//TEMPORARY BEGIN---
+	auto m = [p,x,y,z](int xa, int ya, int za) -> bool {
+		return p[x+xa][y+ya][z+za];
+	};
+	auto triang = [this](int x, int y, int z, bool up) -> void {
+		const float s = 0.1f;
+		if (up) {
+			point(x,y,z);
+			point(x-s, y+s, z);
+			point(x+s, y+s, z);
+		} else {
+			point(x,y,z);
+			point(x-s, y-s, z);
+			point(x+s, y-s, z);
 		}
-		if (tri[0] != -1) {
-			for (int corn : tri) {
-				point(x,y,z, corn);
-			}
-		}
+	};
 
-	}
+	if (m(0, -1, 0))
+		triang(x+0, y-1, z+0, false);
+	if (m(1, -1, 0))
+		triang(x+1, y-1, z+0, false);
+	if (m(1, -1, 1))
+		triang(x+1, y-1, z+1, false);
+	if (m(0, -1, 1))
+		triang(x+0, y-1, z+1, false);
+
+	if (m(0, 0, 0))
+		triang(x+0, y, z+0, true);
+	if (m(1, 0, 0))
+		triang(x+1, y, z+0, true);
+	if (m(1, 0, 1))
+		triang(x+1, y, z+1, true);
+	if (m(0, 0, 1))
+		triang(x+0, y, z+1, true);
+	// TEMPORARY END---
+	
+//	bakeToppom(x, y, z, above, middle, below, false);
+	bakeSide(x, y, z, above, middle);
+	/*
 
 	// Top face done, make bottom face
 	if ( c[4] && c[6] ) {
@@ -227,34 +257,114 @@ void BakedChunk::bakeVoxel(int x, int y, int z,
 			point(x,y,z,4);
 			point(x,y,z,6);
 		}
+	}*/
+}
+
+void BakedChunk::bakeToppom(const int x, const int y, const int z, 
+		const bool above[4], const bool middle[4], const bool below[4],
+		const bool bottom) {
+	// crease along what direction?
+	int vStart = 0;	// 0 = crease from 0 to 2, 1 = crease from 1 to 3
+	if ( middle[0] && middle[2] ) {
+		vStart = 0;
+	} else if ( middle[1] && middle[3] ) {
+		vStart = 1;
+	} else if ( below[0] && below[2] ) {
+		vStart = 0;
+	} else if ( below[1] && below[3] ) {
+		vStart = 1;
+	} else {
+		return;
+	}
+
+	int tri[3];
+	// create 2 triangles with different start positions
+	// if vStart = 0, crease from 0 to 2, if = 1, crease from 1 to 3
+	for (int start = vStart; start < 3 + vStart; start += 2) {
+
+		// Create 3 vertices (a triangle) firstly trying middle
+		// and then below
+		for (int v = 0; v < 3; v++) {
+			int corner = (v + start) % 4 + 1;
+
+			if (middle[corner]) {
+				tri[v] = corner;
+
+			} else if (below[corner]) {
+				tri[v] = -corner;
+
+			} else { // Failed to create a full triangle
+				tri[0] = 0;
+				break;
+			}
+
+		}
+		if (tri[0] != 0) {
+			for (int corn : tri) {
+				point(x,y,z, corn);
+			}
+		}
+
 	}
 }
 
+void BakedChunk::bakeSide(const int x, const int y, const int z,
+		const int above[4], const int middle[4]) {
+	if (middle[0] && middle[2]) {
+		if (middle[1]) {
+			point(x,y,z,middle[0]);
+			point(x,y,z,middle[1]);
+			point(x,y,z,middle[2]);
+		} 
+		if (middle[3]) {
+			point(x,y,z,middle[0]);
+			point(x,y,z,middle[2]);
+			point(x,y,z,middle[3]);
+		}
+	} else if (middle[1] && middle[3]) {
+		if (middle[2]) {
+			point(x,y,z,middle[1]);
+			point(x,y,z,middle[2]);
+			point(x,y,z,middle[3]);
+		} 
+		if (middle[0]) {
+			point(x,y,z,middle[1]);
+			point(x,y,z,middle[3]);
+			point(x,y,z,middle[0]);
+		}
+	}
+}
+
+
 void BakedChunk::point(GLfloat x, GLfloat y, GLfloat z, int cornerIndex) {
 	switch (cornerIndex) {
-		case 0:
+		case 1:
 			point(x, y, z);
 			break;
-		case 1:
+		case 2:
 			point(x+1, y, z);
 			break;
-		case 2:
+		case 3:
 			point(x+1, y, z+1);
 			break;
-		case 3:
+		case 4:
 			point(x, y, z+1);
 			break;
-		case 4:
-			point(x, y+1, z);
+		case -1:
+		        point(x, y-1, z);
+		        break;
+		case -2:
+		        point(x+1, y-1, z);
+		        break;
+		case -3:
+		        point(x+1, y-1, z+1);
+		        break;
+		case -4:
+			point(x, y-1, z+1);
 			break;
-		case 5:
-			point(x+1, y+1, z);
-			break;
-		case 6:
-			point(x+1, y+1, z+1);
-			break;
-		case 7:
-			point(x, y+1, z+1);
+		default:
+			std::cerr << "programming error " << __FILE__ << ':' 
+				<< __LINE__ << std::endl;
 			break;
 	}
 }
