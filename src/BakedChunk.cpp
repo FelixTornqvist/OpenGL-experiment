@@ -89,10 +89,10 @@ void BakedChunk::bakeVoxel(const int x, const int y, const int z,
 	n(middle, 2, -1, 0, -1, 0);
 	n(middle, 3, -2, 1, -1, 0);
 
-	n(below, 0, 2, 1, 0, 1);
-	n(below, 1, 1, 0, 0, 1);
-	n(below, 2, -1, 0, -1, 1);
-	n(below, 3, -2, 1, -1, 1);
+	n(below, 0, 3, 1, 0, 1);
+	n(below, 1, 4, 0, 0, 1);
+	n(below, 2, -4, 0, -1, 1);
+	n(below, 3, -3, 1, -1, 1);
 
 	bakeSide(x, y, z, above, middle);
 
@@ -107,12 +107,28 @@ void BakedChunk::bakeVoxel(const int x, const int y, const int z,
 	n(middle, 2, -2, 1, -1, 0);
 	n(middle, 3, -3, 1, -1, 1);
 
-	n(below, 0, 3, 0, 0, 1);
-	n(below, 1, 2, 0, 0, 0);
-	n(below, 2, -2, 0, -1, 0);
-	n(below, 3, -3, 0, -1, 1);
+	n(below, 0, 4, 0, 0, 1);
+	n(below, 1, 1, 0, 0, 0);
+	n(below, 2, -1, 0, -1, 0);
+	n(below, 3, -4, 0, -1, 1);
 
 	bakeSide(x, y, z, above, middle);
+
+	// Setup for front
+	n(above, 0, true, 0, 0, 2);
+	n(above, 1, true, 1, 0, 2);
+	n(above, 2, true, 1, -1, 2);
+	n(above, 3, true, 0, -1, 2);
+
+	n(middle, 0, 4, 0, 0, 1);
+	n(middle, 1, 3, 1, 0, 1);
+	n(middle, 2, -3, 1, -1, 1);
+	n(middle, 3, -4, 0, -1, 1);
+
+	n(below, 0, 1, 0, 0, 0);
+	n(below, 1, 2, 1, 0, 0);
+	n(below, 2, -2, 1, -1, 0);
+	n(below, 3, -1, 0, -1, 0);
 
 	//TEMPORARY BEGIN---
 	auto m = [p,x,y,z](int xa, int ya, int za) -> bool {
