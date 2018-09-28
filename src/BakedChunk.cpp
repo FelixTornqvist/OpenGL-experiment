@@ -18,67 +18,84 @@ void BakedChunk::bake(bool (&points)[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE]) {
 
 /**
  Corner indexes of voxel
- 0 = 0,0,0
- 4 = 0,1,0
- 1 = 1,0,0
- 3 = 0,0,1
- 6 = 1,1,1 etc.
   Top:
- 0--------1
+ 1--------2
  |        |
  |        |
  |        |
- 3--------2
+ 4--------3
 
-  Bottom:
- 4--------5
+  Bottom (numbers are negative):
+ 1--------2
  |        |
  |        |
  |        |
- 7--------6
+ 4--------3
+
+ top 1 = 0,0,0
+ bottom 3 = 1,-1,1
+
+ Conversion table: (T = top, B = Bottom)
+ T1 0,0,0
+ T2 1,0,0
+ T3 1,0,1
+ T4 0,0,1
+
+ B1 0,-1,0
+ B2 1,-1,0
+ B3 1,-1,1
+ B4 0,-1,1
 */
 void BakedChunk::bakeVoxel(const int x, const int y, const int z, 
 		const bool(& p)[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE]) {
 
-	auto n = [p,x,y,z](int lvl[4], int index, int xa, int ya, int za) 
+	auto n = [p,x,y,z](int lvl[4], int lvlIndex, int corner, int xa, int ya, int za) 
 		-> void {
-		lvl[index] = p[x+xa][y+ya][z+za]? index + 1 : 0;
+		lvl[lvlIndex] = p[x+xa][y+ya][z+za]? corner : 0;
 	};
 
 	int above[4];
 	int middle[4];
 	int below[4];
 
-	n(above, 0, 0, 1, 0);
-	n(above, 1, 1, 1, 0);
-	n(above, 2, 1, 1, 1);
-	n(above, 3, 0, 1, 1);
+	// Setup for top
+	n(above, 0, true, 0, 1, 0);
+	n(above, 1, true, 1, 1, 0);
+	n(above, 2, true, 1, 1, 1);
+	n(above, 3, true, 0, 1, 1);
 	
-	n(middle, 0, 0, 0, 0);
-	n(middle, 1, 1, 0, 0);
-	n(middle, 2, 1, 0, 1);
-	n(middle, 3, 0, 0, 1);
+	n(middle, 0, 1, 0, 0, 0);
+	n(middle, 1, 2, 1, 0, 0);
+	n(middle, 2, 3, 1, 0, 1);
+	n(middle, 3, 4, 0, 0, 1);
 
-	n(below, 0, 0, -1, 0);
-	n(below, 1, 1, -1, 0);
-	n(below, 2, 1, -1, 1);
-	n(below, 3, 0, -1, 1);	
+	n(below, 0, 1, 0, -1, 0);
+	n(below, 1, 2, 1, -1, 0);
+	n(below, 2, 3, 1, -1, 1);
+	n(below, 3, 4, 0, -1, 1);	
 
-//	above[0] = m(0, 1, 0);
-//	above[1] = m(1, 1, 0);
-//	above[2] = m(1, 1, 1);
-//	above[3] = m(0, 1, 1);
+//	bakeToppom(x, y, z, above, middle, below, false);
 
-//	middle[0] = m(0, 0, 0);
-//	middle[1] = m(1, 0, 0);
-//	middle[2] = m(1, 0, 1);
-//	middle[3] = m(0, 0, 1);
-//
-//	below[0] = m(0, -1, 0);
-//	below[1] = m(1, -1, 0);
-//	below[2] = m(1, -1, 1);
-//	below[3] = m(0, -1, 1);
+	bakeSide(x, y, z, above, middle);
+
+	// Setup for back
+	n(above, 0, true, 1, 0, -1);
+	n(above, 1, true, 0, 0, -1);
+	n(above, 2, true, 0, -1, -1);
+	n(above, 3, true, 1, -1, -1);
 	
+	n(middle, 0, 2, 1, 0, 0);
+	n(middle, 1, 1, 0, 0, 0);
+	n(middle, 2, -1, 0, -1, 0);
+	n(middle, 3, -2, 1, -1, 0);
+
+	n(below, 0, 2, 1, 0, 1);
+	n(below, 1, 1, 0, 0, 1);
+	n(below, 2, -1, 0, -1, 1);
+	n(below, 3, -2, 1, -1, 1);
+
+	bakeSide(x, y, z, above, middle);
+
 	//TEMPORARY BEGIN---
 	auto m = [p,x,y,z](int xa, int ya, int za) -> bool {
 		return p[x+xa][y+ya][z+za];
@@ -114,9 +131,7 @@ void BakedChunk::bakeVoxel(const int x, const int y, const int z,
 	if (m(0, 0, 1))
 		triang(x+0, y, z+1, true);
 	// TEMPORARY END---
-	
-//	bakeToppom(x, y, z, above, middle, below, false);
-	bakeSide(x, y, z, above, middle);
+
 	/*
 
 	// Top face done, make bottom face
