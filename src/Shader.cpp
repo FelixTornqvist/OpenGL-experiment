@@ -49,7 +49,11 @@ GLuint Shader::loadShader(const std::string &filename, GLenum shaderType) {
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &wasCompiled );
 
 	if (wasCompiled == 0) {
-		throw std::runtime_error("error while compiling shader \"" + filename + "\": " + getShaderCompilationErrorInfo(shader));
+		throw std::runtime_error(
+			"error while compiling shader \"" +
+			filename + "\": " +
+			getShaderCompilationErrorInfo(shader)
+		);
 	}
 
 	glAttachShader(shaderProgram, shader);
@@ -62,8 +66,13 @@ void Shader::linkShaderProgram(const std::string &programName) {
 	int isLinked;
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, (int *)&isLinked);
 
-	if (isLinked == false)
-		throw std::runtime_error("error while linking shader \"" + programName + "\: " + getShaderLinkingError(shaderProgram));
+	if (isLinked == false) {
+		throw std::runtime_error(
+			"error while linking shader \"" +
+			programName + "\": " +
+			getShaderLinkingError(shaderProgram)
+		);
+	}
 }
 
 std::string Shader::getShaderLinkingError(int32_t shaderId) {
@@ -71,7 +80,12 @@ std::string Shader::getShaderLinkingError(int32_t shaderId) {
 	glGetProgramiv(shaderId, GL_INFO_LOG_LENGTH, &maxLength);
 
 	char* shaderProgramInfoLog = new char[maxLength];
-	glGetProgramInfoLog(shaderProgram, maxLength, &maxLength, shaderProgramInfoLog);
+	glGetProgramInfoLog(
+		shaderProgram,
+		maxLength,
+		&maxLength,
+		shaderProgramInfoLog
+	);
 
 	std::string log(shaderProgramInfoLog);
 

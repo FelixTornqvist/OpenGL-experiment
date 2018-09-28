@@ -7,3 +7,7 @@ openGLTest.depend
 openGLTest.layout
 
 build
+*~
+*.swp
+.depend
+

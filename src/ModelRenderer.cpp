@@ -1,6 +1,7 @@
 #include "ModelRenderer.h"
 
-ModelRenderer::ModelRenderer(ModelShader *s, Camera *_cam): shader(s), cam(_cam) {
+ModelRenderer::ModelRenderer(ModelShader *s, Camera *_cam): 
+	shader(s), cam(_cam) {
 }
 
 void ModelRenderer::render() {

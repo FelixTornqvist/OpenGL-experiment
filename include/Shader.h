@@ -8,7 +8,8 @@
 
 class Shader {
 	public:
-		void BindAttributeLocation(int index, const std::string &attribute);
+		void BindAttributeLocation(int index,
+			const std::string &attribute);
 
 		void UseProgram();
 
@@ -18,9 +19,17 @@ class Shader {
 		Shader();
 		GLuint getProgramID();
 
-		/** Throws runtime_exception if there was an error loading the shader*/
-		GLuint loadShader(const std::string &filename, GLenum shaderType);
-		/** Throws runtime_exception if there was an error linking the shader program*/
+		/**
+		 * Throws runtime_exception if there was an error loading the 
+		 * shader
+		 */
+		GLuint loadShader(const std::string &filename, 
+			GLenum shaderType);
+
+		/**
+		 * Throws runtime_exception if there was an error linking the 
+		 * shader program
+		 */
 		void linkShaderProgram(const std::string &programName);
 
 	private:

@@ -23,6 +23,7 @@ ModelShader *shader;
 Camera *camera;
 ModelRenderer *mRen;
 World* world;
+bool isGameRunning = true;
 
 void SetOpenGLAttributes();
 void CheckSDLError(int line);
@@ -49,8 +50,9 @@ bool initWindow() {
 		return false;
 	}
 
-	mainWindow = SDL_CreateWindow(programName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-								  1024, 1024, SDL_WINDOW_OPENGL);
+	mainWindow = SDL_CreateWindow(programName.c_str(), 
+			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+			1024, 1024, SDL_WINDOW_OPENGL);
 
 	if (!mainWindow ) {
 		std::cout << "Unable to create window\n"<< std::endl;;
@@ -76,7 +78,8 @@ bool initGL() {
 }
 
 void SetOpenGLAttributes() {
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, 
+			SDL_GL_CONTEXT_PROFILE_CORE);
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
@@ -101,27 +104,37 @@ void Cleanup() {
 	SDL_Quit();
 }
 
-void applicationLoop() {
-	bool running = true;
+void handleKeyDown(int key) {
+	switch (key) {
+		case SDLK_ESCAPE:
+			isGameRunning = false;
+			break;
+		case SDLK_m:
+			SDL_bool captureMouse = SDL_FALSE;
+			if (SDL_GetRelativeMouseMode())
+				captureMouse = SDL_FALSE;
+			else
+				captureMouse = SDL_TRUE;
 
+			std::cout << "capture:" << captureMouse << std::endl;
+			SDL_SetRelativeMouseMode(captureMouse);
+			std::cout << "mouse capture off:" << 
+				SDL_GetRelativeMouseMode() << std::endl;
+	}
+}
+
+void applicationLoop() {
 	SDL_Event eve;
 	const Uint8 *state = SDL_GetKeyboardState(NULL);
-	while (running) {
+	while (isGameRunning) {
 
 		while (SDL_PollEvent(&eve)) {
 			switch (eve.type) {
 				case SDL_QUIT:
-					running = false;
+					isGameRunning = false;
 					break;
 				case SDL_KEYDOWN:
-					switch (eve.key.keysym.sym ) {
-						case SDLK_ESCAPE:
-							running = false;
-							break;
-						case SDLK_m:
-							std::cout << "captured:" << SDL_SetRelativeMouseMode(SDL_GetRelativeMouseMode() == SDL_FALSE? SDL_TRUE : SDL_FALSE) << " off:" << SDL_GetRelativeMouseMode() << std::endl;
-					}
-
+					handleKeyDown(eve.key.keysym.sym); 
 					break;
 			}
 		}
@@ -129,10 +142,13 @@ void applicationLoop() {
 		glm::vec3 dSpeed(0.1);
 		glm::vec3 direction = camera->getPointingDirection();
 		float camRY = camera->getRotation().y;
+
 		if (state[SDL_SCANCODE_A]) {
-			camera->addPostition(glm::vec3(sin(camRY), 0, -cos(camRY)) * dSpeed);
+			camera->addPostition(glm::vec3(sin(camRY), 0, 
+					-cos(camRY)) * dSpeed);
 		} else if (state[SDL_SCANCODE_D]) {
-			camera->addPostition(glm::vec3(-sin(camRY), 0, cos(camRY)) * dSpeed);
+			camera->addPostition(glm::vec3(-sin(camRY), 0, 
+					cos(camRY)) * dSpeed);
 		}
 
 		if (state[SDL_SCANCODE_W]) {
@@ -167,8 +183,19 @@ void applicationLoop() {
 
 void addModels(int amount) {
 	int dist = 10;
-	for (int i = 0; i < amount; i++)
-		models.push_back(new Model(glm::vec3(rand() % dist, rand() % dist, rand() % dist) - glm::vec3(dist / 2)));
+
+	for (int i = 0; i < amount; i++) {
+		models.push_back(
+			new Model(
+				glm::vec3(
+					rand() % dist, 
+					rand() % dist, 
+					rand() % dist
+				)
+				- glm::vec3(dist / 2)
+			)
+		);
+	}
 }
 
 int main(int argc, char *argv[]) {

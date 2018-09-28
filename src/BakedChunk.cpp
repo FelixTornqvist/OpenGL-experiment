@@ -37,7 +37,8 @@ void BakedChunk::bake(bool (&points)[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE]) {
  |        |
  7--------6
 */
-void BakedChunk::bakeVoxel(int x, int y, int z, bool(& p)[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE]) {
+void BakedChunk::bakeVoxel(int x, int y, int z, 
+		bool(& p)[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE]) {
 	bool c[8];
 
 	c[0] = p[x][y][z];
@@ -52,7 +53,7 @@ void BakedChunk::bakeVoxel(int x, int y, int z, bool(& p)[CHUNK_SIZE][CHUNK_SIZE
 
 	// Make top face
 	// crease along what direction?
-	int vStart = 0;						// 0 = crease from 0 to 2, 1 = crease from 1 to 3
+	int vStart = 0;	// 0 = crease from 0 to 2, 1 = crease from 1 to 3
 	if ( c[0] && c[2] ) {
 		vStart = 0;
 	} else if ( c[1] && c[3] ) {
@@ -90,7 +91,7 @@ void BakedChunk::bakeVoxel(int x, int y, int z, bool(& p)[CHUNK_SIZE][CHUNK_SIZE
 
 	// Top face done, make bottom face
 	if ( c[4] && c[6] ) {
-		vStart = 0;						// 0 = crease from 0 to 2, 1 = crease from 1 to 3
+		vStart = 0; // 0 = crease from 0 to 2, 1 = crease from 1 to 3
 	} else if ( c[5] && c[7] ) {
 		vStart = 1;
 	} else if ( c[0] && c[2] ) {

@@ -86,8 +86,20 @@ void Chunk::loadModel(GLfloat *arr, int siz) {
 
 	// Positions
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, 3 * siz * sizeof(GLfloat), arr, GL_STATIC_DRAW);
-	glVertexAttribPointer(positionAttributeIndex, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glBufferData(
+		GL_ARRAY_BUFFER,
+		3 * siz * sizeof(GLfloat),
+		arr,
+		GL_STATIC_DRAW
+	);
+	glVertexAttribPointer(
+		positionAttributeIndex,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		0
+	);
 	glEnableVertexAttribArray(positionAttributeIndex);
 
 	// TEMP CODE
@@ -96,8 +108,20 @@ void Chunk::loadModel(GLfloat *arr, int siz) {
 
 	// Colors
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, ( siz * floatsPerColor) * sizeof(GLfloat), colors, GL_STATIC_DRAW);
-	glVertexAttribPointer(colorAttributeIndex, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glBufferData(
+		GL_ARRAY_BUFFER,
+		(siz * floatsPerColor) * sizeof(GLfloat),
+		colors,
+		GL_STATIC_DRAW
+	);
+	glVertexAttribPointer(
+		colorAttributeIndex,
+		4,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		0
+	);
 	glEnableVertexAttribArray(colorAttributeIndex);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

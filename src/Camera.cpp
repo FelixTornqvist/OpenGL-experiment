@@ -6,7 +6,8 @@
 #include "Camera.h"
 
 Camera::Camera(float _fov, float _aspect, float _near, float _far):
-	position(0), rotation(0, 0, 1), fov(_fov), aspect(_aspect), near(_near), far(_far) {
+	position(0), rotation(0, 0, 1), fov(_fov), aspect(_aspect), 
+	near(_near), far(_far) {
 	//ctor
 }
 
@@ -16,7 +17,11 @@ glm::mat4 Camera::getProjectionMat() {
 }
 
 glm::mat4 Camera::getViewMat() {
-	return glm::lookAt(position, getPointingDirection() + position, glm::vec3(0,-1,0));
+	return glm::lookAt(
+		position,
+		getPointingDirection() + position, 
+		glm::vec3(0,-1,0)
+	);
 }
 
 glm::vec3 Camera::getPointingDirection() {
