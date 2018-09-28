@@ -76,8 +76,8 @@ void Chunk::fillTerrainPoints() {
 	}
 }
 
-void Chunk::loadModel(GLfloat *arr, int siz) {
-	vbSize = siz;
+void Chunk::loadModel(GLfloat *positions, int positionsSize) {
+	vbSize = positionsSize;
 	glGenBuffers(2, vbo);
 
 	glGenVertexArrays(1, vao);
@@ -88,8 +88,8 @@ void Chunk::loadModel(GLfloat *arr, int siz) {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(
 		GL_ARRAY_BUFFER,
-		3 * siz * sizeof(GLfloat),
-		arr,
+		3 * positionsSize * sizeof(GLfloat),
+		positions,
 		GL_STATIC_DRAW
 	);
 	glVertexAttribPointer(
@@ -103,14 +103,14 @@ void Chunk::loadModel(GLfloat *arr, int siz) {
 	glEnableVertexAttribArray(positionAttributeIndex);
 
 	// TEMP CODE
-	GLfloat colors[siz * floatsPerColor];
-	genRandFloats(colors, siz * floatsPerColor);
+	GLfloat colors[positionsSize * floatsPerColor];
+	genRandFloats(colors, positionsSize * floatsPerColor);
 
 	// Colors
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(
 		GL_ARRAY_BUFFER,
-		(siz * floatsPerColor) * sizeof(GLfloat),
+		(positionsSize * floatsPerColor) * sizeof(GLfloat),
 		colors,
 		GL_STATIC_DRAW
 	);
