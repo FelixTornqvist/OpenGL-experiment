@@ -66,9 +66,9 @@ class BakedChunk {
 			const int x,
 			const int y,
 			const int z,
-			const bool above[4],
-			const bool middle[4],
-			const bool below[4],
+			const int above[4],
+			const int middle[4],
+			const int below[4],
 			const bool bottom
 		); 
 

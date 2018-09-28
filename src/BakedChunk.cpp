@@ -74,10 +74,9 @@ void BakedChunk::bakeVoxel(const int x, const int y, const int z,
 	n(below, 2, -3, 1, -1, 1);
 	n(below, 3, -4, 0, -1, 1);	
 
-//	bakeToppom(x, y, z, above, middle, below, false);
 
 	if (!(above[0] && above[1] && above[2] && above[3]))
-		bakeSide(x, y, z, above, middle);
+		bakeToppom(x, y, z, above, middle, below, false);
 
 	// Setup for back
 	n(above, 0, true, 1, 0, -1);
@@ -335,7 +334,7 @@ void BakedChunk::bakeVoxel(const int x, const int y, const int z,
 }
 
 void BakedChunk::bakeToppom(const int x, const int y, const int z, 
-		const bool above[4], const bool middle[4], const bool below[4],
+		const int above[4], const int middle[4], const int below[4],
 		const bool bottom) {
 	// crease along what direction?
 	int vStart = 0;	// 0 = crease from 0 to 2, 1 = crease from 1 to 3
@@ -359,13 +358,13 @@ void BakedChunk::bakeToppom(const int x, const int y, const int z,
 		// Create 3 vertices (a triangle) firstly trying middle
 		// and then below
 		for (int v = 0; v < 3; v++) {
-			int corner = (v + start) % 4 + 1;
+			int corner = (v + start) % 4;
 
 			if (middle[corner]) {
-				tri[v] = corner;
+				tri[v] = middle[corner];
 
 			} else if (below[corner]) {
-				tri[v] = -corner;
+				tri[v] = below[corner];
 
 			} else { // Failed to create a full triangle
 				tri[0] = 0;
