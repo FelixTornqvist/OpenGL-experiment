@@ -130,6 +130,26 @@ void BakedChunk::bakeVoxel(const int x, const int y, const int z,
 	n(below, 2, -2, 1, -1, 0);
 	n(below, 3, -1, 0, -1, 0);
 
+	bakeSide(x, y, z, above, middle);
+
+	// Setup for left
+	n(above, 0, true, -1, 0, 0);
+	n(above, 1, true, -1, 0, 1);
+	n(above, 2, true, -1, -1, 1);
+	n(above, 3, true, -1, -1, 0);
+
+	n(middle, 0, 1, 0, 0, 0);
+	n(middle, 1, 4, 0, 0, 1);
+	n(middle, 2, -4, 0, -1, 1);
+	n(middle, 3, -1, 0, -1, 0);
+
+	n(below, 0, 2, 1, 0, 0);
+	n(below, 1, 3, 1, 0, 1);
+	n(below, 2, -3, 1, -1, 1);
+	n(below, 3, -2, 1, -1, 0);
+
+	bakeSide(x, y, z, above, middle);
+
 	//TEMPORARY BEGIN---
 	auto m = [p,x,y,z](int xa, int ya, int za) -> bool {
 		return p[x+xa][y+ya][z+za];
