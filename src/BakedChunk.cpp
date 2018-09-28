@@ -76,7 +76,8 @@ void BakedChunk::bakeVoxel(const int x, const int y, const int z,
 
 //	bakeToppom(x, y, z, above, middle, below, false);
 
-	bakeSide(x, y, z, above, middle);
+	if (!(above[0] && above[1] && above[2] && above[3]))
+		bakeSide(x, y, z, above, middle);
 
 	// Setup for back
 	n(above, 0, true, 1, 0, -1);
@@ -94,7 +95,8 @@ void BakedChunk::bakeVoxel(const int x, const int y, const int z,
 	n(below, 2, -4, 0, -1, 1);
 	n(below, 3, -3, 1, -1, 1);
 
-	bakeSide(x, y, z, above, middle);
+	if (!(above[0] && above[1] && above[2] && above[3]))
+		bakeSide(x, y, z, above, middle);
 
 	// Setup for right
 	n(above, 0, true, 2, 0, 1);
@@ -112,7 +114,8 @@ void BakedChunk::bakeVoxel(const int x, const int y, const int z,
 	n(below, 2, -1, 0, -1, 0);
 	n(below, 3, -4, 0, -1, 1);
 
-	bakeSide(x, y, z, above, middle);
+	if (!(above[0] && above[1] && above[2] && above[3]))
+		bakeSide(x, y, z, above, middle);
 
 	// Setup for front
 	n(above, 0, true, 0, 0, 2);
@@ -130,7 +133,8 @@ void BakedChunk::bakeVoxel(const int x, const int y, const int z,
 	n(below, 2, -2, 1, -1, 0);
 	n(below, 3, -1, 0, -1, 0);
 
-	bakeSide(x, y, z, above, middle);
+	if (!(above[0] && above[1] && above[2] && above[3]))
+		bakeSide(x, y, z, above, middle);
 
 	// Setup for left
 	n(above, 0, true, -1, 0, 0);
@@ -148,7 +152,8 @@ void BakedChunk::bakeVoxel(const int x, const int y, const int z,
 	n(below, 2, -3, 1, -1, 1);
 	n(below, 3, -2, 1, -1, 0);
 
-	bakeSide(x, y, z, above, middle);
+	if (!(above[0] && above[1] && above[2] && above[3]))
+		bakeSide(x, y, z, above, middle);
 
 	//TEMPORARY BEGIN---
 	auto m = [p,x,y,z](int xa, int ya, int za) -> bool {
