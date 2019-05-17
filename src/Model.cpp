@@ -9,6 +9,7 @@
 
 Model::Model(glm::vec3 pos) {
 
+	std::cout << "constructing model" << std::endl;
 	for (auto &row : colors) {
 		row[0] = (rand() % 500) / 500.0;
 		row[1] = (rand() % 500) / 500.0;
@@ -17,15 +18,20 @@ Model::Model(glm::vec3 pos) {
 
 	position = pos;
 
+	std::cout << "loading model" << std::endl;
 	loadModel();
+	std::cout << "loadED model" << std::endl;
 }
 
 void Model::loadModel() {
+	std::cout << "1" << std::endl;
 	glGenBuffers(2, vbo);
+	std::cout << "2" << std::endl;
 
 	glGenVertexArrays(1, vao);
 	glBindVertexArray(vao[0]);
 
+	std::cout << "3" << std::endl;
 
 	// Positions
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
@@ -35,6 +41,7 @@ void Model::loadModel() {
 		diamond, 
 		GL_STATIC_DRAW
 	);
+	std::cout << "4" << std::endl;
 	glVertexAttribPointer(
 		positionAttributeIndex, 
 		3,
@@ -45,6 +52,7 @@ void Model::loadModel() {
 	);
 	glEnableVertexAttribArray(positionAttributeIndex);
 
+	std::cout << "5" << std::endl;
 	// Colors
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(
@@ -53,6 +61,7 @@ void Model::loadModel() {
 		colors,
 		GL_STATIC_DRAW
 	);
+	std::cout << "6" << std::endl;
 	glVertexAttribPointer(
 		colorAttributeIndex,
 		4,
@@ -61,8 +70,10 @@ void Model::loadModel() {
 		0,
 		0
 	);
+	std::cout << "7" << std::endl;
 	glEnableVertexAttribArray(colorAttributeIndex);
 
+	std::cout << "8" << std::endl;
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

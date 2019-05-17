@@ -72,7 +72,14 @@ bool initGL() {
 	glDepthFunc(GL_LEQUAL);
 
 	glewExperimental = GL_TRUE;
-	glewInit();
+	GLenum err = glewInit();
+
+	if (GLEW_OK != err) {
+		std::cerr << "error while initializing glew:" << std::endl;
+		std::cerr << glewGetErrorString(err) << std::endl;
+
+		return false;
+	}
 
 	return true;
 }
@@ -185,6 +192,7 @@ void addModels(int amount) {
 	int dist = 10;
 
 	for (int i = 0; i < amount; i++) {
+		std::cout << "pushing model" << std::endl;
 		models.push_back(
 			new Model(
 				glm::vec3(
@@ -199,17 +207,24 @@ void addModels(int amount) {
 }
 
 int main(int argc, char *argv[]) {
-	if (!initWindow() || !initGL())
+	std::cout << "starting" << std::endl;
+	if (!initWindow() || !initGL()) {
 		return -1;
+	}
+	std::cout << "initialized" << std::endl;
 
 	glClearColor(0.5, 0.5, 0.5, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
+	std::cout << "cleared screen" << std::endl;
 
 	SDL_GL_SwapWindow(mainWindow );
+	std::cout << "swapped window" << std::endl;
 
 	addModels(10);
+	std::cout << "added models" << std::endl;
 	shader = new ModelShader();
 	shader->UseProgram();
+	std::cout << "using shader" << std::endl;
 	camera = new Camera(85, 512.0 / 512.0, 0.1, 100);
 	mRen = new ModelRenderer(shader, camera);
 	world = new World(camera);
@@ -218,6 +233,7 @@ int main(int argc, char *argv[]) {
 		mRen->addModel(model);
 	}
 
+	std::cout << "starting loop" << std::endl;
 	applicationLoop();
 
 	Cleanup();
